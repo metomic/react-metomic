@@ -8,7 +8,7 @@ describe('environment > App', () => {
      * `asFragment`:
      * @see https://testing-library.com/docs/react-testing-library/api#asfragment
      */
-    const {asFragment} = render(<App />);
+    const {asFragment} = render(<App projectId="some-project-id" />);
 
     /**
      * Basic snapshot test to make sure, that rendered component
