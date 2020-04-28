@@ -7,6 +7,7 @@
     "prettier/react"
   ],
   "rules": {
+    "no-underscore-dangle": "off",
     // Allow jsx tags inside .js files.
     "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}],
     // Disable props spreading (<App {...props} />) warning.
@@ -41,7 +42,7 @@
     ],
     // Warning when mutating operators (++, --, etc) are used, object = {} also. `Component.propTypes`, `Component.defaultProps`, common.js (`module.exports`) and `ref.current` are ok.
     "fp/no-mutation": [
-      "warn",
+      "off",
       {
         "commonjs": true,
         "allowThis": true,
