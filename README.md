@@ -15,6 +15,23 @@ yarn add @metomic/react
 
 This component implements the [Metomic SDK](https://metomic.io/reference#the-metomic-sdk) to make getting consent in your React app easy.
 
+### Quickstart
+
+```jsx
+import { ConsentGate, MetomicProvider } from '@metomic/react'
+
+const MyApp = () => (
+  <MetomicProvider projectId="my-project-id">
+    <>
+      <ConsentGate micropolicy="my-policy">
+        <MaybeBlockedComponent />
+      </ConsentGate>
+      <OtherComponent>
+    </>
+  </MetomicProvider>
+)
+```
+
 ### `<MetomicProvider />`
 The `<MetomicProvider>` is the easiest way of getting started.
 Just wrap your app with it pass in the `projectId` prop, and it'll inject the script tags for you in your document's head.
@@ -26,9 +43,10 @@ to render.
 **Props**
 | Prop         | Type    | Default    | Description                                                                                                                                                                                               |
 |--------------|---------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| projectId    | string  | **(required)** | Your [Metomic project id](https://app.metomic.io/dashboard/developers)                                                                                                                                     |
-| autoblocking | boolean | true       | Whether autoblocking is on. This is separate from the [setting in your dashboard](https://app.metomic.io/dashboard/autoblocking), and must be set to `true` if you wish to enable autoblocking, so that the autoblocking configuration is also downloaded. |
-| debug        | boolean | false      | Set to `true` to get console logs for when blocking or unblocking happens.                                                                                                                                |
+| projectId    | string       | **(required)** | Your [Metomic project id](https://app.metomic.io/dashboard/developers)                                                                                                                                    |
+| children     | ReactElement | **(required)** | The rest of your app
+| autoblocking | boolean      | true           | Whether autoblocking is on. This is separate from the [setting in your dashboard](https://app.metomic.io/dashboard/autoblocking), and must be set to `true` if you wish to enable autoblocking, so that the autoblocking configuration is also downloaded. |
+| debug        | boolean      | false          | Set to `true` to get console logs for when blocking or unblocking happens.                                                                                                                                |
 
 
 ### `<ConsentGate />`
@@ -37,7 +55,7 @@ render its `children` or not, based on whether the user has accepted the given
 `micropolicy`.
 
 ```jsx
-import ConsentGate from '@metomic/react'
+import {ConsentGate} from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate micropolicy="my-policy">
@@ -51,7 +69,7 @@ in place of the blocked Component, simply add the `placeholder` prop. You
 can also pass in any parameters you want by passing a an object into the `placeholderParams` prop.
 
 ```jsx
-import ConsentGate from '@metomic/react'
+import {ConsentGate} from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate
@@ -69,10 +87,10 @@ const MyApp = () => (
 
 | Prop              | Type         | Default     | Description                                                                                                                                     |
 |-------------------|--------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| micropolicy       | string       | (required)  | The micropolicy powering this `<ConsentGate/>`.                                                                                                 |
-| children          | ReactElement | (required)  | The component that should be blocked or unblocked. Only one node is allowed, but you may wrap multiple children in a React Fragment if desired. |
-| placeholder       | string       | `undefined` | The url pointing to your Placeholder. You may also use one of the [standard Metomic placeholders](https://metomic.io/docs/placeholder-library)  |
-| placeholderParams | object       | `undefined` | Any arbitrary params you wish to pass to the Placeholder.                                                                                       |
+| micropolicy       | string       | **(required)**  | The micropolicy powering this `<ConsentGate/>`.                                                                                                 |
+| children          | ReactElement | **(required)** | The component that should be blocked or unblocked. Only one node is allowed, but you may wrap multiple children in a React Fragment if desired. |
+| placeholder       | string       | `undefined`    | The url pointing to your Placeholder. You may also use one of the [standard Metomic placeholders](https://metomic.io/docs/placeholder-library)  |
+| placeholderParams | object       | `undefined`    | Any arbitrary params you wish to pass to the Placeholder.                                                                                       |
 
 ### Writing your own Placeholders
 
@@ -95,7 +113,7 @@ That is, instead of wondering if you should mutate the tag or wrap it, in React
 you **always** wrap the component you want to block.
 
 ```jsx
-import ConsentGate from '@metomic/react'
+import {ConsentGate} from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate
@@ -134,7 +152,8 @@ const MyMetomicProvider = () => <MetomicContext.Provider
     debug: (...a) => console.log(`[metomic]`, ...a),
     /* The set of rules powering autoblocking, keyed by micropolicy name:
       {
-        micropolicy: [rule1, rule2]
+        micropolicy1: [rule1, rule2],
+        micropolicy2: [rule1, rule2]
       }
       This is only used for debugging purposes for now, but might be used
       in future.
