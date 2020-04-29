@@ -5,10 +5,10 @@ React wrapper around [Metomic](http://metomic.io/)'s cookie consent solution.
 ## Install
 ```
 # With npm
-npm i react-metomic
+npm i @metomic/react
 
 # With Yarn
-yarn add react-metomic
+yarn add @metomic/react
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ render its `children` or not, based on whether the user has accepted the given
 `micropolicy`.
 
 ```jsx
-import ConsentGate from 'react-metomic'
+import ConsentGate from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate micropolicy="my-policy">
@@ -51,7 +51,7 @@ in place of the blocked Component, simply add the `placeholder` prop. You
 can also pass in any parameters you want by passing a an object into the `placeholderParams` prop.
 
 ```jsx
-import ConsentGate from 'react-metomic'
+import ConsentGate from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate
@@ -95,7 +95,7 @@ That is, instead of wondering if you should mutate the tag or wrap it, in React
 you **always** wrap the component you want to block.
 
 ```jsx
-import ConsentGate from 'react-metomic'
+import ConsentGate from '@metomic/react'
 
 const MyApp = () => (
   <ConsentGate
@@ -122,7 +122,7 @@ Because `<MetomicProvider>` is simply syntactic sugar over the React Context
 that `<ConsentGate>` uses, you may simply write your own Context Provider:
 
 ```jsx
-import {MetomicContext} from 'react-metomic'
+import {MetomicContext} from '@metomic/react'
 const MyMetomicProvider = () => <MetomicContext.Provider
   value={{
     // Only set this to true if, by the time the Provider is rendered, you
