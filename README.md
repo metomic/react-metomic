@@ -1,42 +1,146 @@
-[![Build Status](https://travis-ci.com/morewings/cra-template-npm-library.svg?branch=master)](https://travis-ci.com/morewings/cra-template-npm-library)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=morewings/cra-template-npm-library)](https://dependabot.com)
-[![dependencies Status](https://david-dm.org/morewings/cra-template-npm-library/status.svg)](https://david-dm.org/morewings/cra-template-quickstart-redux)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/7448a6f6-8be5-4d26-b886-f59db21ebb4e/deploy-status)](https://app.netlify.com/sites/cra-template-npm-library/deploys)
-[![yarn version](https://badge.fury.io/js/cra-template-npm-library.svg)](https://www.npmjs.com/package/cra-template-npm-library)
-[![npm](https://img.shields.io/npm/dm/cra-template-npm-library)](https://www.npmjs.com/package/cra-template-npm-library)
+# React library for Metomic cookie widget
 
-# NPM library Create React App template
+React wrapper around [Metomic](http://metomic.io/)'s cookie consent solution.
 
-[Create React App](https://github.com/facebook/create-react-app) (CRA) template to build and publish NPM libraries with **rollup**, **eslint** and **stylelint** configurations. See [full documentation](https://cra-template-npm-library.netlify.com/).
+## Install
+```
+# With npm
+npm i react-metomic
+
+# With Yarn
+yarn add react-metomic
+```
 
 ## Usage
 
-```shell script
-npx create-react-app %PROJECT_NAME% --template npm-library
-``` 
-Or
-```shell script
-yarn create react-app %PROJECT_NAME% --template npm-library
+This component implements the [Metomic SDK](https://metomic.io/reference#the-metomic-sdk) to make getting consent in your React app easy.
+
+### `<MetomicProvider />`
+The `<MetomicProvider>` is the easiest way of getting started.
+Just wrap your app with it pass in the `projectId` prop, and it'll inject the script tags for you in your document's head.
+
+Once the scripts have loaded, `<MetomicProvider>` will inform any
+`<ConsentGate>`s in your code whether they should block or allow their `children`
+to render.
+
+**Props**
+| Prop         | Type    | Default    | Description                                                                                                                                                                                               |
+|--------------|---------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| projectId    | string  | **(required)** | Your [Metomic project id](https://app.metomic.io/dashboard/developers)                                                                                                                                     |
+| autoblocking | boolean | true       | Whether autoblocking is on. This is separate from the [setting in your dashboard](https://app.metomic.io/dashboard/autoblocking), and must be set to `true` if you wish to enable autoblocking, so that the autoblocking configuration is also downloaded. |
+| debug        | boolean | false      | Set to `true` to get console logs for when blocking or unblocking happens.                                                                                                                                |
+
+
+### `<ConsentGate />`
+The main component is the `<ConsentGate>`, which tells React whether to
+render its `children` or not, based on whether the user has accepted the given
+`micropolicy`.
+
+```jsx
+import ConsentGate from 'react-metomic'
+
+const MyApp = () => (
+  <ConsentGate micropolicy="my-policy">
+    <MaybeBlockedComponent />
+  </ConsentGate>
+)
 ```
 
-Then
+If you want to render a [Placeholder](https://metomic.io/docs/placeholders)
+in place of the blocked Component, simply add the `placeholder` prop. You
+can also pass in any parameters you want by passing a an object into the `placeholderParams` prop.
 
-```shell script
-cd %PROJECT_NAME%
-node ./prepare.js # makes required package.json configuration
-yarn start
+```jsx
+import ConsentGate from 'react-metomic'
+
+const MyApp = () => (
+  <ConsentGate
+    micropolicy="my-policy"
+    placeholder="/my-placeholder.html"
+    placeholderParams={{
+      color: 'blue',
+      position: 'left',
+    }}
+  >
+    <MaybeBlockedComponent />
+  </ConsentGate>
+)
 ```
 
-## Features
+| Prop              | Type         | Default     | Description                                                                                                                                     |
+|-------------------|--------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| micropolicy       | string       | (required)  | The micropolicy powering this `<ConsentGate/>`.                                                                                                 |
+| children          | ReactElement | (required)  | The component that should be blocked or unblocked. Only one node is allowed, but you may wrap multiple children in a React Fragment if desired. |
+| placeholder       | string       | `undefined` | The url pointing to your Placeholder. You may also use one of the [standard Metomic placeholders](https://metomic.io/docs/placeholder-library)  |
+| placeholderParams | object       | `undefined` | Any arbitrary params you wish to pass to the Placeholder.                                                                                       |
 
-- Handles all modern JS features.
-- Bundles `commonjs` and `es` module formats.
-- [Husky](https://github.com/typicode/husky) for git hooks.
-- [Eslint](https://eslint.org/) and [stylelint](https://stylelint.io/).
-- [Rollup](https://rollupjs.org/guide/en/) for bundling.
-- [Babel](https://babeljs.io/) for transpiling.
-- [Jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro) for testing.
-- Supports CSS modules, SASS/SCSS, Less and PostCSS.
-- [Docz](https://www.docz.site/) for documentation and demo.
-- And [much more](https://cra-template-npm-library.netlify.com/).
+### Writing your own Placeholders
 
+See the main documentation [here](https://metomic.io/docs/writing-your-own-placeholders).
+
+If the `children` of a `<ConsentGate />` is a native DOM component (e.g. `<img>`
+`<picture>`, `<iframe>`, etc.), your placeholder will get the `text` property
+in its [`onReady()` payload](https://metomic.io/reference#onready).
+
+If `children` is a custom React component that you write or import from a
+library, the `text` property will simply be `undefined`. In most cases, you
+should rely on the `placeholderParams` prop to customise your placeholder,
+rather than parsing the DOMString representing the rendered HTML.
+
+### Difference with HTML manual blocking
+Because React isn't parsed the same way as regular HTML, we don't need a separate
+mechanisms for blocking [different kinds of HTML elements](https://metomic.io/docs/manual-blocking).
+
+That is, instead of wondering if you should mutate the tag or wrap it, in React
+you **always** wrap the component you want to block.
+
+```jsx
+import ConsentGate from 'react-metomic'
+
+const MyApp = () => (
+  <ConsentGate
+    micropolicy="my-policy"
+    placeholder="/my-placeholder.html"
+    placeholderParams={{
+      color: 'blue',
+      position: 'left',
+    }}
+  >
+    <script src="some-external-thing.js" />
+  </ConsentGate>
+)
+```
+
+## Advanced Usage
+
+If you want to control loading the Metomic snippet outside of your React app,
+you can choose not to use the `<MetomicProvider>`. Since `<MetomicProvider>`
+inserts the Metomic scripts via a side effect, this might not be compatible
+with your architecture.
+
+Because `<MetomicProvider>` is simply syntactic sugar over the React Context
+that `<ConsentGate>` uses, you may simply write your own Context Provider:
+
+```jsx
+import {MetomicContext} from 'react-metomic'
+const MyMetomicProvider = () => <MetomicContext.Provider
+  value={{
+    // Only set this to true if, by the time the Provider is rendered, you
+    // are sure that the `window.Metomic` object is initialised. If you
+    // have the snippet in your base HTML, this will be true.
+    isReady: true,
+    // Provide any function used for debugging.
+    // If you wish to silence debug statements, pass in a noop () => {}
+    debug: (...a) => console.log(`[metomic]`, ...a),
+    /* The set of rules powering autoblocking, keyed by micropolicy name:
+      {
+        micropolicy: [rule1, rule2]
+      }
+      This is only used for debugging purposes for now, but might be used
+      in future.
+    */
+    autoblockingRules: {},
+  }}>
+  {children}
+</MetomicContext.Provider>
+```

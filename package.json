@@ -2,6 +2,23 @@
   "name": "react-metomic",
   "version": "0.1.0",
   "private": false,
+  "description": "A react component to subscribe to user consent status via Metomic",
+  "keywords": [
+    "react",
+    "consent",
+    "cookie",
+    "metomic"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metomic/react-metomic",
+    "directory": "/"
+  },
+  "homepage": "https://github.com/metomic/react-metomic#readme",
+  "bugs": {
+    "url": "https://github.com/metomic/react-metomic/issues"
+  },
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -17,16 +34,14 @@
     "fix:js": "npx eslint --fix ./src/",
     "lint:js": "npx eslint ./src/",
     "lint:style": "npx stylelint ./src/",
-    "fix:style": "npx stylelint ./src/ --fix",
-    "start:docs": "docz dev",
-    "build:docs": "docz build"
+    "fix:style": "npx stylelint ./src/ --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      "cover 95%",
       "not dead",
       "not op_mini all"
     ],
@@ -57,7 +72,6 @@
     "@testing-library/react-hooks": "^3.2.1",
     "@testing-library/user-event": "^10.0.0",
     "autoprefixer": "^9.7.5",
-    "docz": "^2.3.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.1",

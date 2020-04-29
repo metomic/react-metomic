@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {noop} from '../utils';
 
 export const MetomicContext = React.createContext({
   isReady: false,
   debug: false,
   autoblockingRules: undefined,
 });
-
-// eslint-disable-next-line no-console
-const log = (...a) => console.debug(`[metomic]`, ...a);
-
-const noop = () => {};
 
 const groupRulesBySlug = (rules = []) =>
   rules.reduce(
@@ -23,11 +19,10 @@ const groupRulesBySlug = (rules = []) =>
 
 const MetomicProvider = ({
   projectId,
-  autoblocking = false,
+  autoblocking = true,
   debug = false,
   children,
 }) => {
-
   const [embedReady, setEmbedReady] = useState(false);
   const [mtmContext, setMtmContext] = useState(undefined);
   const isReady = embedReady && (!autoblocking || mtmContext);
@@ -68,7 +63,8 @@ const MetomicProvider = ({
       <MetomicContext.Provider
         value={{
           isReady,
-          debug: debug ? log : noop,
+          // eslint-disable-next-line no-console
+          debug: (...a) => console.log(`[metomic]`, ...a),
           autoblockingRules: groupRulesBySlug(
             mtmContext?.configAutoblocking?.rules
           ),
