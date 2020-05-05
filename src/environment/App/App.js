@@ -5,11 +5,7 @@ import {MetomicProvider, ConsentGate} from 'lib';
 const App = opts => (
   <MetomicProvider {...opts}>
     {/** <iframe> */}
-    <ConsentGate
-      placeholder="@metomic/youtube"
-      micropolicy="media"
-      width={680}
-      height={315}>
+    <ConsentGate placeholder="@metomic/youtube" micropolicy="embedded-videos">
       <iframe
         title="test-iframe"
         src="https://www.youtube.com/embed/AgpWX18dby4?autoplay=1"

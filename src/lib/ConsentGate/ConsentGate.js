@@ -101,6 +101,8 @@ const ConsentGate = ({
           data-placeholder={placeholder}
           data-micropolicy={micropolicy}
           data-placeholder-params={formatParams(placeholderParams)}
+          width={children.props.width}
+          height={children.props.height}
           {...rest}>
           {/*
               Native DOM elements give us 2 guarantees:
