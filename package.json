@@ -1,6 +1,6 @@
 {
   "name": "@metomic/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "A react component to subscribe to user consent status via Metomic",
   "keywords": [
