@@ -63,6 +63,18 @@ const ConsentGate = ({
 
   return (
     <>
+      {/**
+       * React looks forward for a sibling host node to anchor the vDOM so that
+       * it knows where to insert a rendered DOM node. Because placeholders
+       * replace the rendered mtmTags, if two ConsentGates with placeholders are
+       * rendered side by side, unblocking the first ConsentGate will throw an error.
+       * This is because the reference sibling for the first ConsentGate
+       * is the rendered mtmTag of the 2nd ConsentGate, which, since it has
+       * been placeheld, is no longer in the DOM. For this reason, we render a
+       * an empty text node before and after the mtmTag so that React always has reference to a proper DOM
+       * node as the reference sibling.
+       */}
+      {''}
       {React.Children.only(children) && hasConsent ? (
         children
       ) : (
@@ -107,17 +119,6 @@ const ConsentGate = ({
             blockDescendentSubresource(children)}
         </script>
       )}
-      {/**
-       * React looks forward for a sibling host node to anchor the vDOM so that
-       * it knows where to insert a rendered DOM node. Because placeholders
-       * replace the rendered mtmTags, if two ConsentGates with placeholders are
-       * rendered side by side, unblocking the ConsentGate will throw an error.
-       * This is because the reference sibling for the first ConsentGate
-       * is the rendered mtmTag of the 2nd ConsentGate, which, since it has
-       * been placeheld, is no longer in the DOM. For this reason, we render a
-       * an empty text node so that React always has reference to a proper DOM
-       * node as the reference sibling.
-       */}
       {''}
     </>
   );
