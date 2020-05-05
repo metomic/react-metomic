@@ -5,17 +5,22 @@ import MetomicProvider from '../MetomicProvider';
 
 const MTM_TAG_SELECTOR = `[type="${MTM_TAG_TYPE}"]`;
 
-function loadMetomic(baseElement) {
-  const embed = baseElement.querySelector('script[src*="embed"]');
-  const config = baseElement.querySelector('script[src*="config.js"]');
-  fireEvent(embed, createEvent.load(embed));
+function loadMetomic() {
+  const embed = document.head.querySelector('script[src*="embed"]');
+  const config = document.head.querySelector('script[src*="config.js"]');
   global._mtm = {};
-  fireEvent(config, createEvent.load(config));
+  act(() => {
+    fireEvent(embed, createEvent.load(embed));
+    fireEvent(config, createEvent.load(config));
+  });
 }
 
-describe('MetomicProvider', () => {
+describe('ConsentGate', () => {
   beforeEach(() => {
     global.Metomic = jest.fn();
+  });
+  afterEach(() => {
+    document.head.innerHTML = '';
   });
 
   describe('When Metomic is not yet loaded', () => {
@@ -47,10 +52,7 @@ describe('MetomicProvider', () => {
               <img src="some-src" alt="some alt" data-testid="img" />
             </picture>
           </ConsentGate>
-        </MetomicProvider>,
-        {
-          baseElement: document.documentElement,
-        }
+        </MetomicProvider>
       ));
     });
     describe('if the user has consented to the policy', () => {
@@ -61,7 +63,7 @@ describe('MetomicProvider', () => {
             act(() => callback({enabled: true}));
           }
         });
-        loadMetomic(baseElement);
+        loadMetomic();
       });
       it('should render the children', () => {
         expect(queryByTestId('picture')).toBeTruthy();
@@ -81,7 +83,7 @@ describe('MetomicProvider', () => {
             onConsentChange = props;
           }
         });
-        loadMetomic(baseElement);
+        loadMetomic();
       });
       it('should render the mtmTag with fromReact: true', () => {
         expect(baseElement.querySelector(MTM_TAG_SELECTOR)).toHaveProperty(
