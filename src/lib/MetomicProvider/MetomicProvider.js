@@ -64,7 +64,7 @@ const MetomicProvider = ({
         value={{
           isReady,
           // eslint-disable-next-line no-console
-          debug: (...a) => console.log(`[metomic]`, ...a),
+          debug: debug ? (...a) => console.log(`[metomic]`, ...a) : noop,
           autoblockingRules: groupRulesBySlug(
             mtmContext?.configAutoblocking?.rules
           ),
