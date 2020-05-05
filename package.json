@@ -10,10 +10,10 @@
     "metomic"
   ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metomic/react-metomic",
-    "directory": "/"
+  "repository": "https://github.com/metomic/react-metomic",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "bugs": {
     "url": "https://github.com/metomic/react-metomic/issues"
