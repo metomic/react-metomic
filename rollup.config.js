@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import filesize from 'rollup-plugin-filesize';
+import replace from '@rollup/plugin-replace';
 import includePaths from 'rollup-plugin-includepaths';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import autoprefixer from 'autoprefixer';
@@ -49,6 +50,14 @@ const config = outputs.map(({file, format}) => ({
       paths: ['src'],
       external: Object.keys(pkg.dependencies),
       extensions: ['.js', '.json', '.html'],
+    }),
+    replace({
+      'process.env.REACT_APP_CONFIG_ENDPOINT': JSON.stringify(
+        process.env.REACT_APP_CONFIG_ENDPOINT
+      ),
+      'process.env.REACT_APP_EMBED_URL': JSON.stringify(
+        process.env.REACT_APP_EMBED_URL
+      ),
     }),
     stylelint({
       throwOnError: true,
