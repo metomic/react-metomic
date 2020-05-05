@@ -38,7 +38,7 @@ describe('MetomicProvider', () => {
       ({baseElement, queryByTestId} = render(
         <MetomicProvider projectId="foobar">
           <ConsentGate micropolicy="policy">
-            <picture data-testid="picture">
+            <picture data-testid="picture" width={123} height={456}>
               <source
                 media="(max-width: 799px)"
                 srcSet="some-src-set"
@@ -89,6 +89,12 @@ describe('MetomicProvider', () => {
           true
         );
       });
+      it('shoulder render the mtmTag with the dimensions from the children', () => {
+        const mtmTag = baseElement.querySelector(MTM_TAG_SELECTOR);
+        expect(mtmTag).toHaveAttribute('width', '123');
+        expect(mtmTag).toHaveAttribute('height', '456');
+      });
+
       it('should render the children with a blocked src', () => {
         expect(queryByTestId('picture')).toBeTruthy();
         expect(queryByTestId('source')).toHaveAttribute(
